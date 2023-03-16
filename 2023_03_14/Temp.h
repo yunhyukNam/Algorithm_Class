@@ -3,7 +3,7 @@
 void input(int data[], int size){
     int cnt;
 
-    printf("%d개의 데이터를 입력하세요 : ", size);
+    printf("%d???? ??????? ???????? : ", size);
 
     for(cnt = 0;cnt<size;cnt++){
         scanf("%d", &data[cnt]);
