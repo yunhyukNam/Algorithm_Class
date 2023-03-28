@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include "3_14.h"
+#include "Temp.h"
 
 int main(){
     int data[10] = { 0, };
