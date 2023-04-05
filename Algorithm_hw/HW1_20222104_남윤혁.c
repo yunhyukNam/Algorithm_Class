@@ -3,17 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include <time.h>
 
 // 자료형 선언
 
 //********************** STRUCTURE 5, 6 *******************************
-typedef struct _STUDENT_
+typedef struct _STUDENTINFO_
 {
 	char name[32];
 	int id;
 	double height;
-} STUDENT;
+} STUDENTINFO;
 
 // dir
 #define INCREASING 1
@@ -25,13 +26,25 @@ typedef struct _STUDENT_
 #define HEIGHT 3
 //********************** STRUCTURE 5, 6 ******************************
 
+
+//********************** MALLOC 4, 5 *******************************
+typedef struct _STUDENT_
+{
+	char name[32];
+	char major[32];
+	int age;
+} STUDENT;
+
+//********************** MALLOC 4, 5 *******************************
+
 // 사용자 정의 함수 선언 및 정의
 
+
 //********************** STRUCTURE 5, 6 **********************************
-void insertionSort(STUDENT data[], int size, int dir, int type){
+void insertionSort(STUDENTINFO data[], int size, int dir, int type){
 	int cnt_i, cnt_j;
 
-	STUDENT r_data;
+	STUDENTINFO r_data;
 
 	if(dir == INCREASING){
 		for(cnt_i = 1; cnt_i < size; cnt_i++){
@@ -85,10 +98,10 @@ void insertionSort(STUDENT data[], int size, int dir, int type){
 	}
 }
 
-void insertionSort_by_Ptr(STUDENT* data[], int size, int dir, int type){
+void insertionSort_by_Ptr(STUDENTINFO* data[], int size, int dir, int type){
 	int cnt_i, cnt_j;
 
-	STUDENT* r_data;
+	STUDENTINFO* r_data;
 
 	if(dir == INCREASING){
 		for(cnt_i = 1; cnt_i < size; cnt_i++){
@@ -142,7 +155,7 @@ void insertionSort_by_Ptr(STUDENT* data[], int size, int dir, int type){
 	}
 }
 
-void print_info(STUDENT st[], int size){
+void print_info(STUDENTINFO st[], int size){
 	int cnt_i;
 
 	for(cnt_i = 0; cnt_i < size; cnt_i++){
@@ -154,7 +167,7 @@ void print_info(STUDENT st[], int size){
 	printf("\n");
 }
 
-void print_info_by_Ptr(STUDENT* st[], int size){
+void print_info_by_Ptr(STUDENTINFO* st[], int size){
 	int cnt_i;
 
 	for(cnt_i = 0; cnt_i < size; cnt_i++){
@@ -167,7 +180,44 @@ void print_info_by_Ptr(STUDENT* st[], int size){
 }
 //********************** STRUCTURE 5, 6 **********************************
 
+
+//********************** MALLOC 4, 5 *******************************
+void inputStudent(STUDENT stu[], int size){
+	char buf;
+	int cnt_i;
+	
+	printf("\t[ Input Student ]\n");
+
+	for(cnt_i = 0;cnt_i < size;cnt_i++){
+		printf("\n* %d student\n", cnt_i + 1);
+
+		printf("Name : ");
+		fgets(stu[cnt_i].name, 32, stdin);
+
+		printf("Major : ");
+		fgets(stu[cnt_i].major, 32, stdin);
+
+		printf("Age : ");
+		scanf("%d%c", &((stu+cnt_i)->age), &buf);
+	}
+}
+
+void printStudent(STUDENT stu[], int size){
+	int cnt_i;
+
+	for(cnt_i = 0;cnt_i < size;cnt_i++){
+		printf("\n* %d student\n", cnt_i + 1);
+		printf("Name : %s\n", (stu+cnt_i)->name);
+		printf("Major : %s\n", (*(stu+cnt_i)).major);
+		printf("Age : %d\n", stu[cnt_i].age);
+	}
+}
+
+//********************** MALLOC 4, 5 *******************************
+
+
 // 구조체 파트 실습 5
+/*
 void test1()
 {
 	STUDENT stu[5] = {0x00, };
@@ -211,7 +261,9 @@ void test1()
 	print_info(stu, sizeof(stu) / sizeof(STUDENT));
 	printf("\n");
 }
-	
+
+
+
 // 구조체 파트 실습 6
 void test2()
 {
@@ -262,17 +314,101 @@ void test2()
 	print_info_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENT));
 	printf("\n");
 }	
+*/
+
 
 // 동적메모리할당 실습 4
 void test3()
 {
-	
+	int cnt_i = 0x00;
+	int limit = 0x00;
+	char buf = 0x00;
+
+	STUDENT* stuList = NULL;
+
+	printf("\t[ Input the number of student ]\n");
+	scanf("%d%c", &limit, &buf);
+
+	stuList = (STUDENT*)calloc(limit, sizeof(STUDENT));
+	assert(stuList != NULL);
+
+	inputStudent(stuList, limit);
+	printStudent(stuList, limit);
+
+	if(stuList != NULL){
+		free(stuList);
+	}
 }	
 
 // 동적메모리할당 실습 5
 void test4()
 {
+	STUDENTINFO *stu = NULL;
+	STUDENTINFO **stuPtr = NULL;
+
+	int cnt_i, size;
+
+	printf("Enter the Number of Student : ");
+	scanf("%d", &size);
+
+	stuPtr = (STUDENTINFO **)calloc(size, sizeof(STUDENTINFO *));
+	stu = (STUDENTINFO *)calloc(size, sizeof(STUDENTINFO));
+
+	for(cnt_i = 0;cnt_i < size;cnt_i++){
+		stuPtr[cnt_i] = &stu[cnt_i];
+	}
+
+	printf("\n\t[ Enter the Student Info ]");
 	
+	for(cnt_i = 0;cnt_i < size;cnt_i++){
+		printf("\n");
+		printf("Enter the No.%d Student's Name : ", cnt_i + 1);
+		scanf("%s", stuPtr[cnt_i]->name);
+		printf("Enter the No.%d Student's Id : ", cnt_i + 1);
+		scanf("%d", &(stuPtr[cnt_i]->id));
+		printf("Enter the No.%d Student's Height : ", cnt_i + 1);
+		scanf("%lf", &(stuPtr[cnt_i]->height));
+	}
+
+	printf("\n\t[ Print the Student Info ]\n");
+
+	for(cnt_i = 0;cnt_i < size;cnt_i++){
+		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
+		printf("No.%d Student's Id : %d\n", cnt_i + 1, stuPtr[cnt_i]->id);
+		printf("No.%d Student's Height : %.1lf\n", cnt_i + 1, stuPtr[cnt_i]->height);
+	}
+
+	printf("\n\t[ Sort by Name ]\n");
+	insertionSort_by_Ptr(stuPtr, sizeof(stuPtr) / sizeof(STUDENTINFO), INCREASING, NAME);
+
+	for(cnt_i = 0;cnt_i < size;cnt_i++){
+		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
+		printf("No.%d Student's Id : %d\n", cnt_i + 1, stuPtr[cnt_i]->id);
+		printf("No.%d Student's Height : %.1lf\n", cnt_i + 1, stuPtr[cnt_i]->height);
+	}
+
+	printf("\n\t[ Sort by ID ]\n");
+	insertionSort_by_Ptr(stuPtr, sizeof(stuPtr) / sizeof(STUDENTINFO), INCREASING, ID);
+
+	for(cnt_i = 0;cnt_i < size;cnt_i++){
+		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
+		printf("No.%d Student's Id : %d\n", cnt_i + 1, stuPtr[cnt_i]->id);
+		printf("No.%d Student's Height : %.1lf\n", cnt_i + 1, stuPtr[cnt_i]->height);
+	}
+
+	printf("\n\t[ Sort by Height ]\n");
+	insertionSort_by_Ptr(stuPtr, sizeof(stuPtr) / sizeof(STUDENTINFO), INCREASING, HEIGHT);
+
+	for(cnt_i = 0;cnt_i < size;cnt_i++){
+		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
+		printf("No.%d Student's Id : %d\n", cnt_i + 1, stuPtr[cnt_i]->id);
+		printf("No.%d Student's Height : %.1lf\n", cnt_i + 1, stuPtr[cnt_i]->height);
+	}
+
+	if(stuPtr != NULL && stu != NULL){
+		free(stuPtr);
+		free(stu);
+	}
 }	
 
 // 파일입출력 실습 7
@@ -284,9 +420,9 @@ void test5()
 int main()
 {
 	// test1();
-	test2();
+	// test2();
 	// test3();
-	// test4();
+	test4();
 	// test5();
 
 	return 0;
