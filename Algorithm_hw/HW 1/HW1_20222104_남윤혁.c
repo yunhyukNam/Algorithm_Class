@@ -3,8 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
+#include <windows.h>
 #include <time.h>
+#include <assert.h>
 
 // 자료형 선언
 
@@ -37,9 +38,17 @@ typedef struct _STUDENT_
 
 //********************** MALLOC 4, 5 *******************************
 
+//********************** FILEIO 7 *******************************
+LARGE_INTEGER Frequency;
+LARGE_INTEGER BeginTime;
+LARGE_INTEGER Endtime;
+__int64 elapsed;
+double during_time;
+//********************** FILEIO 7 *******************************
+
+
+//------------------------------------------------------------------------
 // 사용자 정의 함수 선언 및 정의
-
-
 //********************** STRUCTURE 5, 6 **********************************
 void insertionSort(STUDENTINFO data[], int size, int dir, int type){
 	int cnt_i, cnt_j;
@@ -180,7 +189,6 @@ void print_info_by_Ptr(STUDENTINFO* st[], int size){
 }
 //********************** STRUCTURE 5, 6 **********************************
 
-
 //********************** MALLOC 4, 5 *******************************
 void inputStudent(STUDENT stu[], int size){
 	char buf;
@@ -212,9 +220,11 @@ void printStudent(STUDENT stu[], int size){
 		printf("Age : %d\n", stu[cnt_i].age);
 	}
 }
-
 //********************** MALLOC 4, 5 *******************************
 
+//********************** FILEIO 7 *******************************
+// NONE
+//********************** FILEIO 7 *******************************
 
 // 구조체 파트 실습 5
 /*
@@ -318,6 +328,7 @@ void test2()
 
 
 // 동적메모리할당 실습 4
+/*
 void test3()
 {
 	int cnt_i = 0x00;
@@ -410,11 +421,57 @@ void test4()
 		free(stu);
 	}
 }	
+*/
+
 
 // 파일입출력 실습 7
 void test5()
 {
+	int cnt_i;
+	int* dataList = NULL;
+
+	FILE *bfp = NULL;
+	FILE *tfp = NULL;
+
+	QueryPerformanceFrequency(&Frequency);
+
+	dataList = (int*)calloc(10000, sizeof(int));
+
+	for(cnt_i = 0;cnt_i < 10000;cnt_i++){
+		dataList[cnt_i] = cnt_i;
+	}
+
+	bfp = fopen("FileIO_binary.dat", "wb");
+	assert(bfp != NULL);
+
+	tfp = fopen("FileIO_text.txt", "wt");
+	assert(tfp != NULL);
+
+	QueryPerformanceCounter(&BeginTime);
+	fwrite(dataList, sizeof(int), 10000, bfp);
+	QueryPerformanceCounter(&Endtime);
+
+	elapsed = Endtime.QuadPart - BeginTime.QuadPart;
+	during_time = (double)elapsed / (double)Frequency.QuadPart;
+
+	printf("elapsed time with binary file : %lf\n", during_time);
+
+	QueryPerformanceCounter(&BeginTime);
+	for(cnt_i = 0;cnt_i < 10000;cnt_i++){
+		fprintf(tfp, "%d", dataList[cnt_i]);
+	}
+
+	QueryPerformanceCounter(&Endtime);
+
+	elapsed = Endtime.QuadPart - BeginTime.QuadPart;
+	during_time = (double)elapsed / (double)Frequency.QuadPart;
 	
+	printf("elapsed time with text file : %lf\n", during_time);
+
+	if(bfp != NULL && tfp != NULL){
+		free(bfp);
+		free(tfp);
+	}
 }	
 
 int main()
@@ -422,8 +479,8 @@ int main()
 	// test1();
 	// test2();
 	// test3();
-	test4();
-	// test5();
+	// test4();
+	test5();
 
 	return 0;
 }
