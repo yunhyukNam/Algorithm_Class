@@ -425,6 +425,7 @@ void test4()
 
 
 // 파일입출력 실습 7
+/*
 void test5()
 {
 	int cnt_i;
@@ -472,7 +473,8 @@ void test5()
 		free(bfp);
 		free(tfp);
 	}
-}	
+}
+*/
 
 int main()
 {
@@ -480,7 +482,7 @@ int main()
 	// test2();
 	// test3();
 	// test4();
-	test5();
+	// test5();
 
 	return 0;
 }
