@@ -1,4 +1,4 @@
-#define _CRT_NOT_NO_WARNINGS_
+#define _CRT_NOT_SECURE_NO_WARNINGS_
 
 #include <stdio.h>
 #include <string.h>
@@ -241,7 +241,7 @@ void test2(){
     }
 
     else{
-        printf("Find the [%s]!", p -> data);
+        printf("Find the [%s]!\n", p -> data);
     }
 
     printf("\n(4) Insert Node's Middle in List\n");

@@ -49,6 +49,8 @@ double during_time;
 
 //------------------------------------------------------------------------
 // 사용자 정의 함수 선언 및 정의
+//------------------------------------------------------------------------
+
 //********************** STRUCTURE 5, 6 **********************************
 void insertionSort(STUDENTINFO data[], int size, int dir, int type){
 	int cnt_i, cnt_j;
@@ -227,10 +229,9 @@ void printStudent(STUDENT stu[], int size){
 //********************** FILEIO 7 *******************************
 
 // 구조체 파트 실습 5
-/*
 void test1()
 {
-	STUDENT stu[5] = {0x00, };
+	STUDENTINFO stu[5] = {0x00, };
 	int cnt_i;
 
 	printf("\n");
@@ -277,58 +278,56 @@ void test1()
 // 구조체 파트 실습 6
 void test2()
 {
-	STUDENT stu[5] = {0x00, };
-	STUDENT* stu_Ptr[5] = {0x00, };
+	STUDENTINFO stu[5] = {{0x00, },};
+	STUDENTINFO* stu_Ptr[5] = {0x00, };
 
 	int cnt_i;
 
-	for(cnt_i = 0; cnt_i < sizeof(stu) / sizeof(STUDENT); cnt_i++){
+	for(cnt_i = 0; cnt_i < sizeof(stu) / sizeof(STUDENTINFO); cnt_i++){
 		stu_Ptr[cnt_i] = &stu[cnt_i];
 	}
 
 	printf("\n");
 	printf("\t[ Enter the STUDENT info ]\n");
 	
-	for(cnt_i = 0; cnt_i < sizeof(stu) / sizeof(STUDENT); cnt_i++){
+	for(cnt_i = 0; cnt_i < sizeof(stu) / sizeof(STUDENTINFO); cnt_i++){
 		printf("\nEnter No.%d Student's Name : ", cnt_i + 1);
-		scanf("%s", &stu_Ptr[cnt_i]->name);
+		scanf("%s", &(stu_Ptr[cnt_i]->name));
 
 		printf("Enter No.%d Student's Id : ", cnt_i + 1);
-		scanf("%d", &stu_Ptr[cnt_i]->id);
+		scanf("%d", &(stu_Ptr[cnt_i]->id));
 
 
 		printf("Enter No.%d Student's Height : ", cnt_i + 1);
-		scanf("%lf", &stu_Ptr[cnt_i]->height);
+		scanf("%lf", &(stu_Ptr[cnt_i]->height));
 	}
 
 	printf("\n\t[ Print Student's info ]\n");
 	printf("\n");
-	print_info_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENT));
+	print_info_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENTINFO));
 	printf("\n");
 
 	printf("\t[ Sort by Student's Name ]\n");
 	printf("\n");
-	insertionSort_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENT), INCREASING, NAME);
-	print_info_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENT));
+	insertionSort_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENTINFO), INCREASING, NAME);
+	print_info_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENTINFO));
 	printf("\n");
 
 	printf("\t[ Sort by Student's ID ]\n");
 	printf("\n");
-	insertionSort_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENT), INCREASING, ID);
-	print_info_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENT));
+	insertionSort_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENTINFO), INCREASING, ID);
+	print_info_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENTINFO));
 	printf("\n");
 
 	printf("\t[ Sort by Student's Height ]\n");
 	printf("\n");
-	insertionSort_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENT), INCREASING, HEIGHT);
-	print_info_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENT));
+	insertionSort_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENTINFO), INCREASING, HEIGHT);
+	print_info_by_Ptr(stu_Ptr, sizeof(stu) / sizeof(STUDENTINFO));
 	printf("\n");
 }	
-*/
 
 
 // 동적메모리할당 실습 4
-/*
 void test3()
 {
 	int cnt_i = 0x00;
@@ -357,7 +356,7 @@ void test4()
 	STUDENTINFO *stu = NULL;
 	STUDENTINFO **stuPtr = NULL;
 
-	int cnt_i, size;
+	int cnt_i = 0, size;
 
 	printf("Enter the Number of Student : ");
 	scanf("%d", &size);
@@ -374,58 +373,60 @@ void test4()
 	for(cnt_i = 0;cnt_i < size;cnt_i++){
 		printf("\n");
 		printf("Enter the No.%d Student's Name : ", cnt_i + 1);
-		scanf("%s", stuPtr[cnt_i]->name);
+		scanf("%s", &(stuPtr[cnt_i]->name));
 		printf("Enter the No.%d Student's Id : ", cnt_i + 1);
 		scanf("%d", &(stuPtr[cnt_i]->id));
 		printf("Enter the No.%d Student's Height : ", cnt_i + 1);
 		scanf("%lf", &(stuPtr[cnt_i]->height));
 	}
 
-	printf("\n\t[ Print the Student Info ]\n");
+	printf("\n\t[ Print the Student Info ]\n\n");
 
 	for(cnt_i = 0;cnt_i < size;cnt_i++){
 		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
 		printf("No.%d Student's Id : %d\n", cnt_i + 1, stuPtr[cnt_i]->id);
 		printf("No.%d Student's Height : %.1lf\n", cnt_i + 1, stuPtr[cnt_i]->height);
+		printf("\n");
 	}
 
 	printf("\n\t[ Sort by Name ]\n");
-	insertionSort_by_Ptr(stuPtr, sizeof(stuPtr) / sizeof(STUDENTINFO), INCREASING, NAME);
+	insertionSort_by_Ptr(stuPtr, cnt_i < size, INCREASING, NAME);
 
 	for(cnt_i = 0;cnt_i < size;cnt_i++){
 		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
 		printf("No.%d Student's Id : %d\n", cnt_i + 1, stuPtr[cnt_i]->id);
 		printf("No.%d Student's Height : %.1lf\n", cnt_i + 1, stuPtr[cnt_i]->height);
+		printf("\n");
 	}
 
 	printf("\n\t[ Sort by ID ]\n");
-	insertionSort_by_Ptr(stuPtr, sizeof(stuPtr) / sizeof(STUDENTINFO), INCREASING, ID);
+	insertionSort_by_Ptr(stuPtr, cnt_i < size, INCREASING, ID);
 
 	for(cnt_i = 0;cnt_i < size;cnt_i++){
 		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
 		printf("No.%d Student's Id : %d\n", cnt_i + 1, stuPtr[cnt_i]->id);
 		printf("No.%d Student's Height : %.1lf\n", cnt_i + 1, stuPtr[cnt_i]->height);
+		printf("\n");
 	}
 
 	printf("\n\t[ Sort by Height ]\n");
-	insertionSort_by_Ptr(stuPtr, sizeof(stuPtr) / sizeof(STUDENTINFO), INCREASING, HEIGHT);
+	insertionSort_by_Ptr(stuPtr, cnt_i < size, INCREASING, HEIGHT);
 
 	for(cnt_i = 0;cnt_i < size;cnt_i++){
 		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
 		printf("No.%d Student's Id : %d\n", cnt_i + 1, stuPtr[cnt_i]->id);
 		printf("No.%d Student's Height : %.1lf\n", cnt_i + 1, stuPtr[cnt_i]->height);
+		printf("\n");
 	}
 
 	if(stuPtr != NULL && stu != NULL){
 		free(stuPtr);
 		free(stu);
 	}
-}	
-*/
+}
 
 
 // 파일입출력 실습 7
-/*
 void test5()
 {
 	int cnt_i;
@@ -474,14 +475,13 @@ void test5()
 		free(tfp);
 	}
 }
-*/
 
 int main()
 {
 	// test1();
 	// test2();
 	// test3();
-	// test4();
+	test4();
 	// test5();
 
 	return 0;
