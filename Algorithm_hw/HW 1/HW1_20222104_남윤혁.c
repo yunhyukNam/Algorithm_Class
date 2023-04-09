@@ -5,6 +5,7 @@
 #include <string.h>
 #include <windows.h>
 #include <time.h>
+#include <stdbool.h>
 #include <assert.h>
 
 // 자료형 선언
@@ -222,6 +223,34 @@ void printStudent(STUDENT stu[], int size){
 		printf("Age : %d\n", stu[cnt_i].age);
 	}
 }
+
+void insertionSort_by_Ptr_2(STUDENTINFO* data[], int size, int dir, int type){
+	int cnt_i, cnt_j;
+
+	if(dir == INCREASING){
+		for(cnt_i = 0; cnt_i < size - 1; cnt_i++){
+			for(cnt_j = cnt_i - 1; cnt_j >= 0; cnt_j--){
+				if(type == NAME){
+					if(strcmp(data[cnt_j]->name, data[cnt_j+1]->name) <= 0){
+						break;
+					}
+				}
+				else if(type == ID){
+					if(data[cnt_j]->id <= data[cnt_j+1]->id){
+						break;
+					}
+				}
+				else if(type == HEIGHT){
+					if(data[cnt_j]->height <= data[cnt_j+1]->height){
+						break;
+					}
+				}
+				data[cnt_j + 1] = data[cnt_j];
+			}
+			data[cnt_j + 1] = &data;
+		}
+	}
+}
 //********************** MALLOC 4, 5 *******************************
 
 //********************** FILEIO 7 *******************************
@@ -356,7 +385,7 @@ void test4()
 	STUDENTINFO *stu = NULL;
 	STUDENTINFO **stuPtr = NULL;
 
-	int cnt_i = 0, size;
+	int cnt_i, size;
 
 	printf("Enter the Number of Student : ");
 	scanf("%d", &size);
@@ -364,16 +393,16 @@ void test4()
 	stuPtr = (STUDENTINFO **)calloc(size, sizeof(STUDENTINFO *));
 	stu = (STUDENTINFO *)calloc(size, sizeof(STUDENTINFO));
 
-	for(cnt_i = 0;cnt_i < size;cnt_i++){
+	for(cnt_i = 0; cnt_i < size; cnt_i++){
 		stuPtr[cnt_i] = &stu[cnt_i];
 	}
 
 	printf("\n\t[ Enter the Student Info ]");
 	
-	for(cnt_i = 0;cnt_i < size;cnt_i++){
+	for(cnt_i = 0; cnt_i < size; cnt_i++){
 		printf("\n");
 		printf("Enter the No.%d Student's Name : ", cnt_i + 1);
-		scanf("%s", &(stuPtr[cnt_i]->name));
+		scanf("%s", stuPtr[cnt_i]->name);
 		printf("Enter the No.%d Student's Id : ", cnt_i + 1);
 		scanf("%d", &(stuPtr[cnt_i]->id));
 		printf("Enter the No.%d Student's Height : ", cnt_i + 1);
@@ -390,7 +419,7 @@ void test4()
 	}
 
 	printf("\n\t[ Sort by Name ]\n");
-	insertionSort_by_Ptr(stuPtr, cnt_i < size, INCREASING, NAME);
+	insertionSort_by_Ptr_2(stuPtr, size, INCREASING, NAME);
 
 	for(cnt_i = 0;cnt_i < size;cnt_i++){
 		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
@@ -400,7 +429,7 @@ void test4()
 	}
 
 	printf("\n\t[ Sort by ID ]\n");
-	insertionSort_by_Ptr(stuPtr, cnt_i < size, INCREASING, ID);
+	insertionSort_by_Ptr_2(stuPtr, size, INCREASING, ID);
 
 	for(cnt_i = 0;cnt_i < size;cnt_i++){
 		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
@@ -410,7 +439,7 @@ void test4()
 	}
 
 	printf("\n\t[ Sort by Height ]\n");
-	insertionSort_by_Ptr(stuPtr, cnt_i < size, INCREASING, HEIGHT);
+	insertionSort_by_Ptr_2(stuPtr, size, INCREASING, HEIGHT);
 
 	for(cnt_i = 0;cnt_i < size;cnt_i++){
 		printf("No.%d Student's Name : %s\n", cnt_i + 1, stuPtr[cnt_i]->name);
