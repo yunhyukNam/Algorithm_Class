@@ -6,16 +6,16 @@
 #include <assert.h>
 #include <time.h>
 
-typedef struct ListNode {
+typedef struct ListNode { // Node(linked list 구조)
     int data;
     struct ListNode* link;
 } listNode;
 
-typedef struct {
+typedef struct { // 원형 연결리스트 시작하는 head 노드 선언
     listNode* head;
 } linkedList_h;
 
-linkedList_h* createLinkedList_h(void){
+linkedList_h* createLinkedList_h(void){ // 공백 원형 리스트 생성 == CL
     linkedList_h* CL;
     CL = (linkedList_h*)malloc(sizeof(linkedList_h));
     CL->head = NULL;
@@ -150,6 +150,30 @@ listNode* searchNode(linkedList_h* CL, int x){
     return NULL;
 }
 
+listNode* searchNode2(listNode* from, int x){
+    int cnt_i = 0;
+
+    listNode* temp;
+    temp = from;
+
+    if(temp == NULL){
+        return NULL;
+    }
+    do{
+        printf("Search try : %d\n", cnt_i++);
+
+        if(temp->data == x){
+            return temp;
+        }
+        else{
+            temp = temp->link;
+        }
+    }
+    while(temp != from);
+
+    return NULL;
+}
+
 void orderedInsert(linkedList_h* CL, int x){
     listNode* pre = NULL;
     listNode* cur = NULL;
@@ -220,7 +244,7 @@ void freeLinkedList_h(linkedList_h* CL){
     }
 }
 
-void exec2_circularlist(){
+void exec2_circular_list(){
     int cnt_i, data;
 
     linkedList_h* CL;
@@ -290,5 +314,5 @@ void exec2_circularlist(){
 }
 
 void main(){
-    exec2_circularlist();
+    exec2_circular_list();
 }
