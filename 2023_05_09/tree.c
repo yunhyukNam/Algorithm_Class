@@ -127,7 +127,7 @@ void showTree(TREENODE* _node) {
     int position;
     int start, term, index;
 
-    height = getHeight(_node)+1;
+    height = getHeight(_node) + 1;
 
     if (height != 0) {
         numOfNodes = (1 << height);
