@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_STACK_SIZE	100
 #define MAX_QUEUE_SIZE	100
 
 #define MAZE_SIZE	6
@@ -51,7 +50,7 @@ char maze[MAZE_SIZE][MAZE_SIZE] = {
 
 void enqueue(Element _val) {
 	if (is_Full()) {
-		error("	í í¬í™” ì—ëŸ¬");
+		error("	? ?¬?™” ?—?Ÿ¬");
 	}
 	rear = (rear+1) % MAX_QUEUE_SIZE;
 	data[rear] = _val;
@@ -59,7 +58,7 @@ void enqueue(Element _val) {
 
 Element dequeue() {
 	if (is_Empty()) {
-		error("	í ê³µë°± ì—ëŸ¬");
+		error("	? ê³µë°± ?—?Ÿ¬");
 	}
 	front = (front+1) % MAX_QUEUE_SIZE;
 
@@ -68,7 +67,7 @@ Element dequeue() {
 
 Element peek() {
 	if (is_Empty()) {
-		error("	í ê³µë°± ì—ëŸ¬");
+		error("	? ê³µë°± ?—?Ÿ¬");
 	}
 	
 	return data[(front+1) % MAX_QUEUE_SIZE];
@@ -125,6 +124,37 @@ void printMaze(char _m[MAZE_SIZE][MAZE_SIZE]) {
 	printf("\n\n");
 }
 
+// ----------------------------------------------------
+
+#define max_queue_size	100000
+
+int s_queue[max_queue_size];
+int front = 0, rear = -1;
+
+int q_empty() {
+	if (rear - front + 1 == 0) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
+void q_push(int _data) {
+	s_queue[++rear] = _data;
+}
+
+int q_pop() {
+	if (rear - front + 1 == 0) {
+		return -1;
+	}
+	return s_queue[front++];
+}
+
+// ----------------------------------------------------
+
+
+
 void test1() {
 	int r, c;
 
@@ -163,7 +193,54 @@ void test1() {
 }
 
 void test2() {
-	
+	int str;
+	char command[10];
+
+	scanf("%d", &str);
+
+	for (int cnt_i = 0;cnt_i < str; cnt_i++) {
+		scanf("%s", command);
+
+		if (!strcmp(command, "push")) {
+			int data;
+
+			scanf("%d", &data);
+			q_push(data);
+		}
+		else if (!strcmp(command, "pop")) {
+			printf("%d\n", q_pop());
+		}
+		else if (!strcmp(command, "size")) {
+			if (q_empty() == 1) {
+				printf("%d\n", 0);
+			}
+			else {
+				printf("%d\n", (rear - front + 1));
+			}
+		}
+		else if (!strcmp(command, "empty")) {
+			printf("%d\n", q_empty());
+		}
+		else if (!strcmp(command, "front")) {
+			if(rear - front + 1 == 0) {
+				printf("%d\n", -1);
+			}
+			else {
+				printf("%d\n", s_queue[front]);
+			}
+		}
+		else if (!strcmp(command, "back")) {
+			if(rear - front + 1 == 0) {
+				printf("%d\n", -1);
+			}
+			else {
+				printf("%d\n", s_queue[rear]);
+			}
+		}
+		else {
+			printf("Check your Enter, please\n");
+		}
+	}
 }
 
 void test3() {
@@ -172,8 +249,8 @@ void test3() {
 
 int main()
 {
-	test1();
-	//test2();
+	// test1();
+	test2();
 	//test3();
 
 	return 0;
