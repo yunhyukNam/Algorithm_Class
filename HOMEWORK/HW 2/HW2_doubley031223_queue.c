@@ -1,257 +1,159 @@
+#define NO_CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_QUEUE_SIZE	100
+#define DATA_MAX_SIZE	500001
 
-#define MAZE_SIZE	6
+typedef struct QUEUE {
+    int data[DATA_MAX_SIZE];
+    
+    int front, rear;
+} QUEUE;
 
-typedef struct _POS_ {
-	short r;
-	short c;
-} POS;
+QUEUE q;
 
-typedef POS Element;
-
-Element data[MAX_QUEUE_SIZE];
-
-int front;
-int rear;
-
-void error(char* _str) {
-	fprintf(stderr, "%s\n", _str);
-	exit(1);
+void init (QUEUE *q) {
+    q->front = q->rear = -1;
 }
 
-void init_queue() {
-	front = rear = 0;
-}
-int is_Empty() {
-	return front == rear;
-}
-int is_Full() {
-	return front == (rear+1) % MAX_QUEUE_SIZE;
-}
-int size() {
-	return (rear-front+MAX_QUEUE_SIZE) % MAX_QUEUE_SIZE;
+int empty (QUEUE *q) {
+    return (q->front == q->rear);
 }
 
-Element here = {1, 0}, entry = {1, 0};
-
-char maze[MAZE_SIZE][MAZE_SIZE] = {
-	{ '1', '1', '1', '1', '1', '1' },
-	{ 'e', '0', '1', '0', '0', '1' },
-	{ '1', '0', '0', '0', '1', '1' },
-	{ '1', '0', '1', '0', '1', '1' },
-	{ '1', '0', '1', '0', '0', 'x' },
-	{ '1', '1', '1', '1', '1', '1' },
-};
-
-void enqueue(Element _val) {
-	if (is_Full()) {
-		error("	? ?¬?™” ?—?Ÿ¬");
-	}
-	rear = (rear+1) % MAX_QUEUE_SIZE;
-	data[rear] = _val;
+int full (QUEUE *q) {
+    return ((q->rear + 1) % DATA_MAX_SIZE == q->front);
 }
 
-Element dequeue() {
-	if (is_Empty()) {
-		error("	? ê³µë°± ?—?Ÿ¬");
-	}
-	front = (front+1) % MAX_QUEUE_SIZE;
+int size (QUEUE *q) {
+    if (empty(q)) {
+        return 0;
+    }
 
-	return data[front];
+    return (q->rear - q->front);
 }
 
-Element peek() {
-	if (is_Empty()) {
-		error("	? ê³µë°± ?—?Ÿ¬");
-	}
-	
-	return data[(front+1) % MAX_QUEUE_SIZE];
+void push (QUEUE *q, int _data) {
+    q->data[++(q->rear)] = _data;
 }
 
-void printQ() {
-	int cnt_i;
+int pop (QUEUE *q) {
+    if (empty(q)) {
+        return -1;
+    }
 
-	if (!is_Empty()) {
-		printf("\n[");
-
-		for (cnt_i = front+1; cnt_i <= rear; cnt_i++) {
-			printf("(%d, %d) ", data[cnt_i].r, data[cnt_i].c);
-		}
-		printf("]\n\n");
-	}
+    return q->data[++(q->front)];
 }
 
-void pushLoc(int _r, int _c) {
-	if (_r < 0 || _c < 0) {
-		return;
-	}
-	
-	if (maze[_r][_c] != '1' && maze[_r][_c] != '.') {
-		Element tmp;
-		tmp.r = _r;
-		tmp.c = _c;
-
-		enqueue(tmp);
-	}
+int front (QUEUE *q) {
+    if (empty(q)) {
+        return -1;
+    }
+    
+    return q->data[q->front + 1];
 }
 
-void printMaze(char _m[MAZE_SIZE][MAZE_SIZE]) {
-	int r, c;
+int back (QUEUE *q) {
+    if (empty(q)) {
+        return -1;
+    }
 
-	printf("\n\n");
-
-	for (r = 0; r < MAZE_SIZE; r++) {
-		for (c = 0; c < MAZE_SIZE; c++) {
-			if (c == here.c && r == here.r) {
-				printf("m");
-			}
-			else {
-				if (_m[r][c] == 0) {
-					printf("0	");
-				}
-				else {
-					printf("%c", _m[r][c]);
-				}
-			}
-		}
-		printf("\n");
-	}
-	printf("\n\n");
+    return q->data[q->rear];
 }
 
 // ----------------------------------------------------
 
-#define max_queue_size	100000
-
-int s_queue[max_queue_size];
-int front = 0, rear = -1;
-
-int q_empty() {
-	if (rear - front + 1 == 0) {
-		return 1;
-	}
-	else {
-		return 0;
-	}
+void enqueue (QUEUE *q, int _data) {
+    if (full(q)) {
+        return;
+    }
+    else {
+        q->rear = (q->rear + 1) % DATA_MAX_SIZE;
+        q->data[q->rear] = _data;
+    }
 }
 
-void q_push(int _data) {
-	s_queue[++rear] = _data;
-}
+int dequeue (QUEUE *q) {
+    if (empty(q)) {
+        return -1;
+    }
+    else {
+        q->front = (q->front + 1) % DATA_MAX_SIZE;
 
-int q_pop() {
-	if (rear - front + 1 == 0) {
-		return -1;
-	}
-	return s_queue[front++];
+        return q->data[q->front];
+    }
 }
 
 // ----------------------------------------------------
-
-
 
 void test1() {
-	int r, c;
+    init(&q);
 
-	here = entry;
+    int count;
+    scanf("%d", &count);
 
-	printMaze(maze);
-	printQ();
-
-	while (maze[here.r][here.c] != 'x') {
-		printMaze(maze);
-
-		r = here.r;
-		c = here.c;
-
-		maze[r][c] = '.';
-
-		pushLoc(r-1, c);
-		pushLoc(r+1, c);
-		pushLoc(r, c-1);
-		pushLoc(r, c+1);
-		printQ();
-
-		if (is_Empty()) {
-			printf("FAILURE\n");
-
-			return;
-		}
-		else {
-			here = dequeue();
-		}
-
-		printMaze(maze);
-		printQ();
-	}
-	printf("SUCCESS\n");
+    while(count--) {
+        char command[6];
+        scanf("%s", command);
+        
+        if (!strcmp(command, "push")) {
+            int data = 0;
+            scanf("%d", &data);
+            
+            push(&q, data);
+        }
+        else if (!strcmp(command, "front")) {
+            printf("%d\n", front(&q));
+        }
+        else if (!strcmp(command, "back")) {
+            printf("%d\n", back(&q));
+        }
+        else if (!strcmp(command, "pop")) {
+            printf("%d\n", pop(&q));
+        }
+        else if (!strcmp(command, "size")) {
+            printf("%d\n", size(&q));
+        }
+        else if (!strcmp(command, "empty")) {
+            printf("%d\n", empty(&q));
+        }
+        else {
+            printf("Check your Enter, please\n");
+        }
+    }
 }
 
 void test2() {
-	int str;
-	char command[10];
+    init(&q);
 
-	scanf("%d", &str);
+    int count;
+    scanf("%d", &count);
 
-	for (int cnt_i = 0;cnt_i < str; cnt_i++) {
-		scanf("%s", command);
+    for (int cnt_i = 0; cnt_i < count; cnt_i++) {
+        enqueue(&q, cnt_i + 1);
+    }
 
-		if (!strcmp(command, "push")) {
-			int data;
+    int data = 0;
 
-			scanf("%d", &data);
-			q_push(data);
-		}
-		else if (!strcmp(command, "pop")) {
-			printf("%d\n", q_pop());
-		}
-		else if (!strcmp(command, "size")) {
-			if (q_empty() == 1) {
-				printf("%d\n", 0);
-			}
-			else {
-				printf("%d\n", (rear - front + 1));
-			}
-		}
-		else if (!strcmp(command, "empty")) {
-			printf("%d\n", q_empty());
-		}
-		else if (!strcmp(command, "front")) {
-			if(rear - front + 1 == 0) {
-				printf("%d\n", -1);
-			}
-			else {
-				printf("%d\n", s_queue[front]);
-			}
-		}
-		else if (!strcmp(command, "back")) {
-			if(rear - front + 1 == 0) {
-				printf("%d\n", -1);
-			}
-			else {
-				printf("%d\n", s_queue[rear]);
-			}
-		}
-		else {
-			printf("Check your Enter, please\n");
-		}
-	}
-}
+    while(!empty(&q)) {
+        data = dequeue(&q);
 
-void test3() {
-	
+        if (empty(&q)) {
+            break;
+        }
+        else {
+            data = dequeue(&q); 
+            enqueue(&q, data);
+        }
+    }
+    printf("%d\n", data);
 }
 
 int main()
 {
 	// test1();
 	test2();
-	//test3();
 
 	return 0;
 }
