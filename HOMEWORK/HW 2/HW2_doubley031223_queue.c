@@ -126,10 +126,11 @@ void printMaze(char _m[MAZE_SIZE][MAZE_SIZE]) {
 
 // ----------------------------------------------------
 
-#define max_queue_size	100000
-
-int s_queue[max_queue_size];
-int front = 0, rear = -1;
+typedef struct queue {
+	int queue[100000];
+	int front = 0;
+	int rear = -1;
+} s_queue;
 
 int q_empty() {
 	if (rear - front + 1 == 0) {
@@ -250,8 +251,8 @@ void test3() {
 int main()
 {
 	// test1();
-	test2();
-	//test3();
+	// test2();
+	test3();
 
 	return 0;
 }
